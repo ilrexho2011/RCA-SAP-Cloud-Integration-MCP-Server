@@ -8,8 +8,17 @@ Remote MCP server with Python that connects to the SAP Cloud Integration APIs an
 - Generate DOCX documentation
 - Score iFlow quality
 
-## Run locally
+## Run locally (Terminal / Powershell)
 ```bash
 cp .env.example .env
 uv sync
 uv run python -m app.main
+```
+## Connect with MCP Inspector (Terminal / Powershell)
+```bash
+npx -y @modelcontextprotocol/inspector
+```
+## Endpoint
+```bash
+http://localhost:8000/mcp
+```
