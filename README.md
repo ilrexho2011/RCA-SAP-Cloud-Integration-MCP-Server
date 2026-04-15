@@ -1,4 +1,4 @@
-# RCA-SAP-Cloud-Integration-MCP-server
+# RCA-SAP-Cloud-Integration-MCP-Server
 Remote MCP server with Python that connects to the SAP Cloud Integration APIs and exposes different tools
 
 ## Features in v0.1
