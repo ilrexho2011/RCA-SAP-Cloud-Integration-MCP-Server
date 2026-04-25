@@ -5,7 +5,7 @@ Remote MCP server with Python that connects to the SAP Cloud Integration APIs an
 
 <img width="1662" height="931" alt="image" src="https://github.com/user-attachments/assets/0bc2f310-7929-49d7-89ca-f8d81e37045f" />
 
-## Features in v0.1
+## Features in v 1.0
 
 - Catalog packages
 - Catalog iFlows
