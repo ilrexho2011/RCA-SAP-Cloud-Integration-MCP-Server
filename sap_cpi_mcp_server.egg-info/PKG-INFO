@@ -1,0 +1,119 @@
+Metadata-Version: 2.4
+Name: sap-cpi-mcp-server
+Version: 0.2.3
+Summary: MCP server for SAP Cloud Integration / SAP Integration Suite
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: mcp<2,>=1.17.0
+Requires-Dist: httpx>=0.27.0
+Requires-Dist: pydantic>=2.8.0
+Requires-Dist: pydantic-settings>=2.4.0
+Requires-Dist: python-docx>=1.1.2
+Requires-Dist: lxml>=5.3.0
+Requires-Dist: tenacity>=9.0.0
+Requires-Dist: uvicorn>=0.30.0
+Requires-Dist: matplotlib>=3.8
+Requires-Dist: reportlab>=4.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.23.0; extra == "dev"
+Requires-Dist: ruff>=0.6.0; extra == "dev"
+Dynamic: license-file
+
+# RCA SAP Cloud Integration MCP Server v2.1.8
+
+Remote MCP server for SAP Cloud Integration / SAP Integration Suite.
+
+## Core tools
+
+- catalog_packages
+- catalog_iflows
+- analyze_iflow
+- generate_iflow_docx
+- score_iflow_quality
+
+## Knowledge generation tools
+
+- generate_interface_catalogs
+- generate_kedb_documents
+- generate_runbook_documents
+- update_kedb_documents
+- update_runbook_documents
+- generate_knowledge_output_bundle
+- assess_ingestion_policy_compliance
+
+## Production-hardening additions in v2.1
+
+- MPL semantic coverage enrichment for KEDB and Runbook generation
+- MCP form-mode elicitation for interactive version selection
+- ZIP input handling directly in update tools (`source_zip_path`)
+- Combined knowledge-output bundle export from the MCP layer itself
+- Staging/output directories for bundle assembly and ZIP extraction
+
+## Design notes
+
+- The server remains a remote MCP server over `streamable-http`.
+- Version selection can now be interactive when the client supports MCP elicitation.
+- One file is generated per atomic knowledge artifact.
+- Runbook section names are kept stable for BM25-oriented retrieval.
+- Example corpora and policy documents are included under `resources/`.
+
+## Interface catalog formatting hardening in v2.1.3
+
+- Added a post-processing formatter layer for interface catalog generation
+- Enforces left-aligned markdown, `*` bullets, and stable section spacing
+- Removes noisy generalistic lines with `no-lead actions`
+- Keeps interface catalog output aligned with the approved reference style
+
+## Timeout configuration in v2.1.2
+
+The SAP HTTP client now supports granular timeout settings via environment variables:
+
+- `SAP_CONNECT_TIMEOUT_SECONDS`
+- `SAP_READ_TIMEOUT_SECONDS`
+- `SAP_WRITE_TIMEOUT_SECONDS`
+- `SAP_POOL_TIMEOUT_SECONDS`
+
+The legacy `SAP_TIMEOUT_SECONDS` remains supported as a fallback when the granular values are not set.
+
+## Run locally
+
+```bash
+cp .env.example .env
+uv sync
+uv run python -m app.main
+```
+
+## Test with MCP Inspector
+
+```bash
+npx -y @modelcontextprotocol/inspector
+```
+
+Endpoint: `http://localhost:8000/mcp`
+
+## Example combined bundle call
+
+Use `generate_knowledge_output_bundle` with:
+
+- a selected version or interactive elicitation
+- optional `kedb_zip_path`
+- optional `runbook_zip_path`
+- `use_mpl=true`
+
+## Packaged policy assets
+
+- `resources/policies/AI4BIZ_Knowledge_Ingestion_Guide.txt`
+- `resources/policies/BM25_Runbook_Authoring_Guideline.txt`
+- `resources/policies/AI4BIZ_Interface_Inventory_Schema.txt`
+
+
+## Ingestion compliance assessment in v2.1.8
+
+- Added `assess_ingestion_policy_compliance`
+- Evaluates KEDB, Runbooks, Interface Catalogs, and Official Docs under `exports/knowledge`
+- Produces on-disk DOCX, TXT, remediation TXT, JSON, and PNG chart outputs
+- Uses the packaged AI4BIZ policy documents, the compliance example corpus, and can optionally enrich the narrative through OpenAI
+- Keeps the assessment scoped to the generated corpus without modifying the knowledge files themselves
+- Returns an on-screen markdown summary together with chart paths for quick review in MCP clients
