@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/mcp_iflow_audit_output_schema.json",
+  "title": "MCP iFlow Audit Output",
+  "type": "object",
+  "required": [
+    "tool",
+    "version",
+    "generated_at_utc",
+    "iflow",
+    "scoring",
+    "audit",
+    "documentation"
+  ],
+  "properties": {
+    "tool": { "type": "string", "const": "analyze_iflow" },
+    "version": { "type": "string" },
+    "generated_at_utc": { "type": "string", "format": "date-time" },
+    "iflow": {
+      "type": "object",
+      "required": ["id", "analysis_mode", "summary"],
+      "properties": {
+        "id": { "type": "string" },
+        "analysis_mode": {
+          "type": "string",
+          "enum": ["zip_based", "metadata_only", "unknown"]
+        },
+        "package_name": { "type": ["string", "null"] },
+        "resolved_version": { "type": ["string", "null"] },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "scoring": {
+      "type": "object",
+      "required": [
+        "profile",
+        "score",
+        "max_score",
+        "confidence_level",
+        "confidence_score",
+        "evidence_coverage",
+        "anti_pattern_categories",
+        "weighted_scoring_matrix",
+        "issues"
+      ],
+      "properties": {
+        "profile": { "type": "string" },
+        "score": { "type": "integer" },
+        "max_score": { "type": "integer" },
+        "raw_score_100": { "type": ["number", "integer"] },
+        "confidence_level": {
+          "type": "string",
+          "enum": ["very_high", "high", "medium", "low"]
+        },
+        "confidence_score": { "type": "integer" },
+        "evidence_coverage": {
+          "type": "object",
+          "required": ["percentage", "status", "signals"],
+          "properties": {
+            "percentage": { "type": "number" },
+            "status": { "type": "string" },
+            "signals": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["field", "status", "coverage_value"],
+                "properties": {
+                  "field": { "type": "string" },
+                  "status": { "type": "string" },
+                  "coverage_value": { "type": "number" }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "anti_pattern_categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "anti_pattern_code",
+              "category",
+              "severity",
+              "issue_type",
+              "count",
+              "points_deducted"
+            ],
+            "properties": {
+              "anti_pattern_code": { "type": "string" },
+              "category": { "type": "string" },
+              "severity": { "type": "string" },
+              "issue_type": { "type": "string" },
+              "count": { "type": "integer" },
+              "points_deducted": { "type": "number" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "weighted_scoring_matrix": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "dimension",
+              "label",
+              "weight",
+              "points_awarded",
+              "points_deducted",
+              "status",
+              "evidence_field",
+              "rationale"
+            ],
+            "properties": {
+              "dimension": { "type": "string" },
+              "label": { "type": "string" },
+              "weight": { "type": "number" },
+              "points_awarded": { "type": "number" },
+              "points_deducted": { "type": "number" },
+              "status": { "type": "string" },
+              "evidence_field": { "type": "string" },
+              "rationale": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "anti_pattern_code",
+              "category",
+              "severity",
+              "issue_type",
+              "points_deducted",
+              "message",
+              "recommendation"
+            ],
+            "properties": {
+              "anti_pattern_code": { "type": "string" },
+              "category": { "type": "string" },
+              "severity": { "type": "string" },
+              "issue_type": { "type": "string" },
+              "points_deducted": { "type": "number" },
+              "message": { "type": "string" },
+              "recommendation": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "audit": {
+      "type": "object",
+      "required": [
+        "quality_gate",
+        "documentation_ready",
+        "recommended_next_step",
+        "top_risk_codes",
+        "mcp_documentation",
+        "audit_narrative"
+      ],
+      "properties": {
+        "quality_gate": { "type": "string" },
+        "documentation_ready": { "type": "boolean" },
+        "recommended_next_step": { "type": "string" },
+        "top_risk_codes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "mcp_documentation": { "type": "object" },
+        "audit_narrative": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "documentation": {
+      "type": "object",
+      "required": ["visibility_note", "section_blocks"],
+      "properties": {
+        "visibility_note": { "type": "string" },
+        "section_blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "title", "content"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["paragraph", "bullets", "table", "key_value"]
+              },
+              "title": { "type": "string" },
+              "content": {}
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
