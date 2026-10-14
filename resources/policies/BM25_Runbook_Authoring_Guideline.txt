@@ -1,0 +1,160 @@
+Enterprise Runbook Authoring Guideline for BM25-Based Retrieval
+
+Purpose
+This guideline defines strict authoring rules for runbooks that are intended to be indexed and retrieved by BM25-based keyword search engines used in modern information retrieval systems.
+
+Scope
+These rules apply to all runbooks that are written for operational troubleshooting, incident response, remediation guidance, validation, and recovery workflows.
+
+Normative Rules
+
+Rule 1 — A runbook must represent one canonical problem only
+Each runbook must describe one clearly bounded error pattern, failure mode, or operational issue.
+A runbook must not mix unrelated incidents, multiple root causes, or several error families in the same document.
+Reason: BM25 performs best when one document is strongly aligned with one query intent.
+
+Rule 2 — The title must contain the canonical retrieval phrase
+The title must use the exact technical phrase that a user, operator, or retrieval system is most likely to search for.
+The title should contain the primary error signature, protocol, status code, or system component whenever relevant.
+Example: HTTP 401 Unauthorized on SAP CPI Receiver Call
+A title must not be vague, generic, or business-only.
+
+Rule 3 — Mandatory metadata must appear at the top in a fixed order
+Each runbook must begin with the approved metadata block in a stable and identical order.
+The metadata block should include the fields required by the enterprise standard, such as:
+environment
+customer_id
+system_id
+sap_sid
+artifact_type
+object_name
+priority
+interface_id
+integration_flow_id
+integration_flow_name
+package_name
+review_cycle
+Metadata names must not be renamed across runbooks.
+Reason: field consistency improves deterministic filtering, indexing quality, and typed retrieval behavior.
+
+Rule 4 — Canonical terms must be repeated consistently across key fields
+The same canonical error wording must appear consistently in the title, object_name, error signature, technical context, diagnosis section, and remediation section.
+Authors should prefer one canonical term over multiple stylistic synonyms.
+Example: use Unauthorized, not a mix of Unauthorized, not allowed, access denied, and login failed for the same exact issue.
+Reason: BM25 rewards exact and repeated term overlap between query and document.
+
+Rule 5 — Stable section headings must be used in every runbook
+All runbooks must use the same approved section headings.
+Preferred headings include:
+Purpose
+Business Context
+Technical Landscape
+Error Signature
+Diagnosis Procedure
+Recovery / Fix Actions
+Validation After Fix
+Rollback
+Escalation
+Evidence / MPL Context
+Section headings must not change freely between documents.
+Reason: stable headings improve chunking, targeted retrieval, and downstream citation.
+
+Rule 6 — Each section must contain one semantic function only
+Each section must contain only the content type implied by its heading.
+For example:
+Diagnosis Procedure must explain how to confirm the issue.
+Recovery / Fix Actions must explain how to resolve the issue.
+Validation After Fix must explain how to verify recovery.
+Rollback must explain how to restore the previous safe state.
+A section must not mix diagnosis, remediation, validation, and rollback in the same paragraph.
+Reason: semantic purity makes keyword matching more precise and reduces retrieval noise.
+
+Rule 7 — Literal technical evidence must be preserved
+The runbook must preserve exact technical strings whenever they are operationally relevant.
+This includes:
+exact error messages
+exception class names
+HTTP status codes
+adapter names
+protocol names
+endpoint labels
+interface identifiers
+message fields such as MessageGuid, CorrelationId, Sender, Receiver, and IntegrationFlowName
+Technical evidence must not be over-paraphrased.
+Reason: operators often search with copied log text, and BM25 strongly benefits from literal term matches.
+
+Rule 8 — Operational steps should be short, explicit, and action-led
+Diagnosis, remediation, validation, and rollback steps should be written as short operational instructions.
+Each step should begin with a direct action verb such as:
+Check
+Verify
+Confirm
+Compare
+Replay
+Restart
+Restore
+Escalate
+Long narrative paragraphs should be avoided in action sections.
+Reason: compact action-led language improves scanability and keeps high-value keywords dense.
+
+Rule 9 — Taxonomy labels should be normalized and hierarchical
+When the enterprise standard includes taxonomy fields, authors should use a normalized multi-level pattern.
+Preferred format:
+DOMAIN | CATEGORY | SUBCATEGORY | CODE
+Example:
+HTTP | AUTHENTICATION | UNAUTHORIZED | 401
+Taxonomy labels must remain stable across the corpus.
+Reason: controlled vocabulary improves retrieval precision, corpus consistency, and analytics readiness.
+
+Rule 10 — Noise words and decorative language must be minimized
+Runbooks should prefer technical clarity over stylistic variation.
+Authors should avoid:
+marketing language
+broad storytelling
+unnecessary adjectives
+vague phrases such as something went wrong or system issue
+A runbook must not rely on implied meaning when an explicit technical term is available.
+Reason: BM25 relevance is stronger when documents contain compact, discriminative terms.
+
+Rule 11 — Cross-references must preserve the same retrieval vocabulary
+If a runbook references a KEDB record, monitoring pattern, incident type, or related runbook, the linked artifact should use the same canonical vocabulary for the same issue.
+Cross-linked documents should repeat the same object_name, error signature, and normalized taxonomy whenever applicable.
+Reason: vocabulary alignment strengthens retrieval across the full knowledge corpus.
+
+Rule 12 — Every runbook should include query-facing evidence and post-fix proof
+Each runbook should include both:
+1. query-facing evidence that helps retrieval before the fix, and
+2. post-fix validation terms that confirm recovery after the fix.
+Examples of query-facing evidence:
+copied error text
+status code
+adapter type
+flow name
+MPL field values
+Examples of post-fix proof:
+final status is COMPLETED
+no retry backlog remains
+endpoint authentication succeeds
+downstream acknowledgment is received
+Reason: strong retrieval requires both failure-side and recovery-side vocabulary.
+
+Authoring Constraints
+Prefer one runbook per error family.
+Prefer one canonical naming pattern across the full corpus.
+Do not rename headings without updating the enterprise standard.
+Do not remove mandatory metadata.
+Do not replace exact technical strings with loose paraphrases.
+
+Minimum Quality Check Before Publishing
+A runbook is ready for publication only if all of the following are true:
+1. The title contains the main searchable error phrase.
+2. Mandatory metadata is complete and in the correct order.
+3. The same canonical terms appear in all key sections.
+4. Stable headings are used without deviation.
+5. Diagnosis, fix, validation, and rollback are clearly separated.
+6. Exact runtime evidence is present where available.
+7. Action steps are short and operational.
+8. Taxonomy labels follow the approved normalized pattern.
+
+Recommended Standard Statement
+This runbook corpus is authored for BM25-oriented keyword retrieval. Therefore, lexical consistency, section stability, metadata discipline, and exact technical wording are mandatory design requirements, not optional editorial preferences.
